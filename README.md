@@ -14,6 +14,6 @@ Tested with the next versions of tools:
 
 ##### Launching the cluster
 * For local virtual clusters it is recommended to launch deployment process with ```./deployment/deploy.sh``` with one node, then pack it in Vagrant box to lower down the time of whole deployment. In case of full deploy C* and Spark binaries will be downloaded for each node
-* You have to install the same Spark version on your local machine in case you want to launch ```spark-submit`` without ssh-ing to the cluster nodes
+* You have to install the same Spark version on your local machine in case you want to launch ```spark-submit``` without ssh-ing to the cluster nodes
 
 [1]: https://github.com/datastax/spark-cassandra-connector#documentation

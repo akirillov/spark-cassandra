@@ -1,7 +1,7 @@
-- name: add the debian package for ops center
+- name: adding DataStax debian repository
   apt_repository: repo='deb http://debian.datastax.com/community stable main' state=present
 
-- name: add the key for the ops center repository
+- name: adding the key for DataStax repository
   apt_key: url=http://debian.datastax.com/debian/repo_key state=present
 
 - name: installing C*
