@@ -1,0 +1,20 @@
+- name: download spark
+  get_url: url=http://d3kbcqa49mib13.cloudfront.net/spark-1.2.0-bin-hadoop2.4.tgz dest=/tmp/ force=no
+
+- name: unzip spark
+  unarchive: copy=no src=/tmp/spark-1.2.0-bin-hadoop2.4.tgz dest=/etc creates=/etc/spark-1.2.0-bin-hadoop2.4
+
+- name: override slaves file
+  template: src=spark-env.sh dest=/etc/spark-1.2.0-bin-hadoop2.4/conf/spark-env.sh
+
+- name: override the slaves file om the master
+  template: src=slaves dest=/etc/spark-1.2.0-bin-hadoop2.4/conf/slaves
+
+- shell: chown -R spark /etc/spark-1.2.0-bin-hadoop2.4
+
+- name: start the master and all the salves
+  action: shell /etc/spark-1.2.0-bin-hadoop2.4/sbin/start-all.sh
+  async: 1000000
+  poll: 0
+  when: spark_master == "{{ inventory_hostname }}"
+  sudo_user: spark

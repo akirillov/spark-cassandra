@@ -1,0 +1,29 @@
+- name: add the debian package for ops center
+  apt_repository: repo='deb http://debian.datastax.com/community stable main' state=present
+
+- name: add the key for the ops center repository
+  apt_key: url=http://debian.datastax.com/debian/repo_key state=present
+
+- name: installing C*
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - dsc21
+    - cassandra-tools
+  notify: stop cassandra
+
+- name: installing OpsCenter
+  apt: name=opscenter state=present
+  when: opscenter_host == "{{ inventory_hostname }}"
+  notify: start opscenter
+
+- shell: rm -rf {{ item }}
+  with_items:
+    - /var/lib/cassandra/data/*
+    - /var/lib/cassandra/commitlog/*
+
+- name: copying configuration
+  template: src={{ item }} dest=/etc/cassandra/
+  with_items:
+    - cassandra.yaml
+    - cassandra-env.sh
+  notify: restart cassandra

@@ -1,0 +1,14 @@
+---
+
+  - name: Create User
+    user: name={{ username }} generate_ssh_key=yes force=yes groups="sudo,admin" shell=/bin/bash
+
+  - name: Make it Sudoer
+    action: 'shell echo {{ username }}  ALL=NOPASSWD: ALL >> /etc/sudoers'
+
+  - name: Fetch keys
+    fetch: src=/home/{{ username }}/.ssh/id_rsa.pub dest=/tmp/fetched/{{ username }}/{{ inventory_hostname }}/id_rsa.pub flat=yes
+
+  - name: Adding SSH keys
+    authorized_key: user={{ username }} state=present key="{{ lookup('file', '/tmp/fetched/'+ username +'/'+ item +'/id_rsa.pub') }}"
+    with_items: groups.all

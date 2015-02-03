@@ -1,0 +1,11 @@
+.vagrant/
+.idea/
+.idea_modules/
+target/
+
+RUNNING_PID
+logs/
+project/*-shim.sbt
+project/project/
+project/target/
+

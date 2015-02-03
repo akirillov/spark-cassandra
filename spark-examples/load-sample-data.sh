@@ -1,0 +1,1 @@
+cqlsh 192.168.5.101 -C -f fixture.cql;

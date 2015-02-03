@@ -1,0 +1,9 @@
+---
+- name: stop cassandra
+  service: name=cassandra state=stopped
+
+- name: restart cassandra
+  service: name=cassandra state=restarted
+
+- name: start opscenter
+  service: name=opscenterd state=started

@@ -1,0 +1,22 @@
+---
+
+- name: Fetch keys
+  fetch: src=/home/{{ username }}/.ssh/id_rsa.pub dest=/tmp/fetched/{{ username }}/{{ inventory_hostname }}/id_rsa.pub flat=yes
+
+- name: Adding SSH keys
+  authorized_key: user={{ username }} state=present key="{{ lookup('file', '/tmp/fetched/'+ username +'/'+ item +'/id_rsa.pub') }}"
+  with_items: groups.all
+
+- name: Set FQDN
+  hostname: name="{{ inventory_hostname }}"
+
+- name: Populating /etc/hosts
+  lineinfile: dest=/etc/hosts regexp='.*{{ item }}' line="{{ hostvars[item].ansible_eth1.ipv4.address }} {{item}}" state=present
+  when: hostvars[item].ansible_eth1 is defined
+  with_items: groups.all
+
+- name: Adding passwordless ssh to FDQNs
+  shell: "ssh-keyscan -H {{ item }} >> /etc/ssh/ssh_known_hosts; ssh-keyscan -H {{ hostvars[item].ansible_eth1.ipv4.address }} >> /etc/ssh/ssh_known_hosts"
+  with_items: groups.all
+
+

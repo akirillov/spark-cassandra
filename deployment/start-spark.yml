@@ -1,0 +1,12 @@
+---
+
+- hosts: cassandra
+  sudo: yes
+  vars:
+      spark_master: 192.168.5.101
+  tasks:
+    - action: shell /etc/spark-1.2.0-bin-hadoop2.4/sbin/start-all.sh
+      async: 1000000
+      poll: 0
+      when: spark_master == "{{ inventory_hostname }}"
+      sudo_user: spark

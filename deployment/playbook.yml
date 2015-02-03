@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  sudo: yes
+  vars:
+    username: "spark"
+  roles:
+    - role: copy-ssh-id #creates ambari user and shares public key across hosts
+    - role: pwdless-ssh #populates /etc/hosts and /etc/ssh/ssh_known_hosts with cluster nodes information
+
+- hosts: cassandra
+  sudo: yes
+  vars:
+      cluster_name: supernova
+      seeds: 192.168.5.101
+      opscenter_host: 192.168.5.101
+      spark_master: 192.168.5.101
+  roles:
+    - role: common
+    - role: oracle-java
+    - role: cassandra
+    - role: spark
